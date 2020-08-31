@@ -125,7 +125,7 @@ func (m *NvidiaDevicePlugin) Allocate(ctx context.Context,
 		}
 
 		// 2. Update Pod spec
-		newPod := updatePodAnnotations(assumePod)
+		newPod := updatePodAnnotations(assumePod, candidateDevID)
 		_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
 		if err != nil {
 			// the object has been modified; please apply your changes to the latest version and try again
@@ -136,7 +136,7 @@ func (m *NvidiaDevicePlugin) Allocate(ctx context.Context,
 					log.Warningf("Failed due to %v", err)
 					return buildErrResponse(reqs, podReqGPU), nil
 				}
-				newPod = updatePodAnnotations(pod)
+				newPod = updatePodAnnotations(pod, candidateDevID)
 				_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
 				if err != nil {
 					log.Warningf("Failed due to %v", err)

@@ -10,7 +10,7 @@ import (
 )
 
 // update pod env with assigned status
-func updatePodAnnotations(oldPod *v1.Pod) (newPod *v1.Pod) {
+func updatePodAnnotations(oldPod *v1.Pod) (newPod *v1.Pod, deviceID string) {
 	newPod = oldPod.DeepCopy()
 	if len(newPod.ObjectMeta.Annotations) == 0 {
 		newPod.ObjectMeta.Annotations = map[string]string{}
@@ -19,6 +19,7 @@ func updatePodAnnotations(oldPod *v1.Pod) (newPod *v1.Pod) {
 	now := time.Now()
 	newPod.ObjectMeta.Annotations[EnvAssignedFlag] = "true"
 	newPod.ObjectMeta.Annotations[EnvResourceAssumeTime] = fmt.Sprintf("%d", now.UnixNano())
+	newPod.ObjectMeta.Annotations[envNVGPU] = deviceID
 
 	return newPod
 }
